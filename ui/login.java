@@ -33,9 +33,8 @@ public class login {
         }
     }
 
-    public void login(ArrayList<User> Users) {
-        //       System.out.println("登录功能暂未实现");
-//        1. 键盘录入用户名
+
+    //        1. 键盘录入用户名
 //        2. 键盘录入密码
 //        3. 键盘录入验证码
 //        4. 登录最多重试三次，三次错误账号锁定
@@ -48,67 +47,62 @@ public class login {
 //	验证码错误提示：验证码输入错误，请重新输入，并生成一个新的验证码
 //
 //	判断用户名和密码是否正确，有3次机会，满3次账户锁定。
-//
 
-//
-//        比如：aQa1K
-        int Error = 0;
-        while (true) {
-            Scanner sc = new Scanner(System.in);
-            System.out.println("请输入用户名：");
-            String name = sc.next();
-            if (CheckRepeat(Users, name)) {
-                System.out.println("用户名未注册，请先注册");
-                continue;
-            }
-            if (!GetStatus(Users, name)) {
-                System.out.println("用户" + name + "已经锁定，请联系官方客服：XXX-XXXXX");
-                continue;
-            }
 
+    public void login(ArrayList<User> Users) {
+        //       System.out.println("登录功能暂未实现");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入用户名：");
+        String name = sc.next();
+        if (CheckRepeat(Users, name)) {
+            System.out.println("用户名未注册，请先注册");
+            return;
+        }
+        if (!GetStatus(Users, name)) {
+            System.out.println("用户" + name + "已经锁定，请联系官方客服：XXX-XXXXX");
+            return;
+        }
+
+
+        for (int i = 0; i < 3; ) {
+            System.out.println("请输入密码：");
+            String password = sc.next();
 
             while (true) {
-                System.out.println("请输入密码：");
-                String password = sc.next();
                 String code = CreatCode();
                 System.out.println("验证码为：" + code);
                 System.out.println("请输入验证码：");
                 String inputcode = sc.next();
 
-
-                //判断密码和验证码
                 if (!code.equals(inputcode)) {
-                    Error++;
-                    if (Error < 3) {
-                        System.out.println("验证码输入错误，请重新输入。你还剩" + (3 - Error) + "次登录机会");
-                        continue;
-                    }else {
-                        LockAccount(Users, name);
-                        System.out.println("账号已锁定，请联系官方客服：XXX-XXXXX");
-                        return;
-                    }
+                    System.out.println("验证码输入错误，请重新输入");
+                    continue;
                 }
-
-                if (!(CheckPassword(name, password, Users))){
-                    Error++;
-                    if (Error < 3) {
-                        System.out.println("密码错误，请重新输入。你还剩" + (3 - Error) + "次登录机会");
-                        continue;
-                    } else {
-                        LockAccount(Users, name);
-                        System.out.println("账号已锁定，请联系官方客服：XXX-XXXXX");
-                        return;
-                    }
-                }
-
-                //登录成功
-                System.out.println("登录成功，欢迎你：" + name);
-                return;
-
+                break;
             }
 
+            if(!(CheckPassword(name, password, Users))) {
+                i++;
+                if (i < 3) {
+                    System.out.println("密码错误，请重新输入。你还剩" + (3 - i) + "次登录机会");
+                    continue;
+                } else {
+                    LockAccount(Users, name);
+                    System.out.println("账号已锁定，请联系官方客服：XXX-XXXXX");
+                    return;
+                }
+            }
+            System.out.println("登录成功，欢迎你：" + name);
+            return;
         }
+
+        //登录成功
+        System.out.println("登录成功，欢迎你：" + name);
+        return;
+
+
     }
+
 
     public void register(ArrayList<User> Users) {
 
@@ -166,6 +160,15 @@ public class login {
 
     }
 
+    public int Findindex(ArrayList<User> Users, String name) {
+        for (int i = 0; i < Users.size(); i++) {
+            User u = Users.get(i);
+            if (u.getName().equals(name)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     public boolean GetStatus(ArrayList<User> Users, String name) {
         for (int i = 0; i < Users.size(); i++) {
@@ -203,7 +206,7 @@ public class login {
             code.append(c.get(index));
         }
         int index = rand.nextInt(n.size());
-        int location = rand.nextInt(05);//数字插入位置索引,
+        int location = rand.nextInt(5);//数字插入位置索引,
         code.insert(location, n.get(index));
         return code.toString();
     }
