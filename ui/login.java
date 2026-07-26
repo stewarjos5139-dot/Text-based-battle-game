@@ -93,6 +93,8 @@ public class login {
                 }
             }
             System.out.println("登录成功，欢迎你：" + name);
+            FightingGame FG = new FightingGame();
+            FG.gameStart(name);
             return;
         }
 
@@ -267,6 +269,4 @@ public class login {
         }
         return true;
     }
-
-
 }
