@@ -45,8 +45,8 @@ public class Character {
 
     //展示当前状态
     //zhangsan [HP: 100/100, ATK: 10, DEF: 0]
-    public void show(){
-        System.out.println("Name [HP:" + HP+"/"+MaxHP+",ATK:"+Attack+",DEF:"+Defense+"]");
+    public String show(){
+        return name+ "[HP:" + HP+"/"+MaxHP+",ATK:"+Attack+",DEF:"+Defense+"]";
     }
 
 

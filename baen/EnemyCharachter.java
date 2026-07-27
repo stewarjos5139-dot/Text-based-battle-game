@@ -17,6 +17,7 @@ public class EnemyCharachter extends Character {
     @Override
     public void takeDamage(int amount) {
         if (defending) {
+            System.out.println("对手开启了防御姿态，伤害减半");
             amount = amount/2;
             defending = false;
         }
