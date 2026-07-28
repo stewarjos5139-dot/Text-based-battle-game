@@ -1,4 +1,4 @@
-package 文字战斗fright.baen;
+package 文字战斗fright.bean;
 
 public class Character {
     public String name;

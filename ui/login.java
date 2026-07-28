@@ -1,6 +1,6 @@
 package 文字战斗fright.ui;
 
-import 文字战斗fright.baen.User;
+import 文字战斗fright.bean.User;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -97,10 +97,6 @@ public class login {
             FG.gameStart(name);
             return;
         }
-
-        //登录成功
-        System.out.println("登录成功，欢迎你：" + name);
-        return;
 
 
     }

@@ -1,8 +1,8 @@
 package 文字战斗fright.ui;
 
-import 文字战斗fright.baen.Character;
-import 文字战斗fright.baen.EnemyCharachter;
-import 文字战斗fright.baen.HeroCharacter;
+import 文字战斗fright.bean.Character;
+import 文字战斗fright.bean.EnemyCharachter;
+import 文字战斗fright.bean.HeroCharacter;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,7 +23,7 @@ public class FightingGame {
 //        | 敌人名称 | 生命值 | 攻击力 | 防御力 | 技能（变量）                                           |
 //| -------- | ------ | ------ | ------ | ------------------------------------------------------ |
 //| 初级战士 | 80     | 15     | 10     | 猛击（150%伤害）                                       |
-//| 敏捷刺客 | 60     | 20     | 5      | 快速攻击（2次50%伤害）                                 |
+//| 敏捷刺客 | 60     | 20     | 5      | 快速攻击（2次75%伤害）                                 |
 //| 重装坦克 | 120    | 10     | 20     | 防御姿态（下回合伤害减半） buff（ boolean defendding） |
 //| 神秘法师 | 70     | 25     | 8      | 火球术（180%伤害）                                     |
         ArrayList<EnemyCharachter> EnemyCharacter = new ArrayList<>();
@@ -72,11 +72,12 @@ public class FightingGame {
                     wins += 1;
                     //属性成长
                     if (wins%3==0){
-                        HC.HP+=30;
+                        HC.heal(30);
                         HC.MaxHP+=30;
                         HC.Attack+=5;
                         HC.Defense+=3;
                         System.out.println("恭喜你胜利3场，属性获得提升：HP+30, ATK+5, DEF+3！");
+                        System.out.println("当前属性："+HC.show());
                     }
                     System.out.println("\uD83C\uDF89 你击败了"+EC.name+"！");
                     //恢复生命值
@@ -100,6 +101,7 @@ public class FightingGame {
                     }else{
                         System.out.println("输入错误，游戏自动结束");
                         endGame(wins,count);
+                        System.exit(0);
                     }
                 }
                 //敌人打我一下
@@ -191,7 +193,7 @@ public class FightingGame {
             }
             case 2:{
                // 💥 消耗10HP，你对 敏捷刺客 使用了强力一击，造成 31 点伤害！
-                if (player.HP >10) {
+                if (player.HP >=10) {
                     player.HP -=10;
                     int attack = (int) Math.round(player.Attack*1.8);
                     int damage=calculateDamage(attack,enemy.Defense);
@@ -203,7 +205,7 @@ public class FightingGame {
                 break;
             }
             case 3:{
-                if (player.HP >10) {
+                if (player.HP >=10) {
                     player.HP -=10;
                     Random rand = new Random();
                     int heal =  rand.nextInt(21);
@@ -292,6 +294,7 @@ public class FightingGame {
             newHero.setHP(newHero.getMaxHP());
             newHero.setAttack(10 + 2 * ATpoint);
             newHero.setDefense(DFpoint);
+            newHero.setName(userName);
             //添加技能
             newHero.SkillList.add("普通攻击");
             newHero.SkillList.add("强力一击");

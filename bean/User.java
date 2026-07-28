@@ -1,4 +1,4 @@
-package 文字战斗fright.baen;
+package 文字战斗fright.bean;
 
 import java.util.Random;
 
@@ -11,7 +11,7 @@ public class User {
 
     public String CreatId() {
         StringBuilder sb = new StringBuilder("Meng");
-        Random r = new Random(10);
+        Random r = new Random();
         for (int i = 0; i < 5; i++) {
             sb.append(r.nextInt(10));
         }

@@ -1,4 +1,4 @@
-package 文字战斗fright.baen;
+package 文字战斗fright.bean;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,4 @@
-package 文字战斗fright.baen;
-
-import java.util.ArrayList;
+package 文字战斗fright.bean;
 
 public class EnemyCharachter extends Character {
     public String Skill;

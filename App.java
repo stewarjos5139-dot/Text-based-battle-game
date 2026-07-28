@@ -1,11 +1,6 @@
 package 文字战斗fright;
 
-import 文字战斗fright.baen.Character;
-import 文字战斗fright.ui.FightingGame;
 import 文字战斗fright.ui.login;
-
-import java.util.Random;
-import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
