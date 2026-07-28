@@ -34,7 +34,7 @@ public class FightingGame {
         System.out.println("\n");
         System.out.println("═══════════════════════════════════════");
         int count = 1;
-        int win = 0;
+        int wins = 0;
         while (HC.isAlive()){
 //            怪物成长系统
 //            第一场战斗：怪物是基础属性
@@ -58,7 +58,7 @@ public class FightingGame {
 
             //回合战斗
             int Round = 1;
-            while (HC.isAlive() && EC.isAlive()) {
+            while (HC.isAlive()) {
                 System.out.println("⚔\uFE0F 第 "+Round+" 回合开始！ ");
                 //展示血条
 //                zhangsan: [████████████████████] 100/100 HP
@@ -66,25 +66,107 @@ public class FightingGame {
                 showHP(HC);
                 showHP(EC);
                 //我打敌人一下
-
-                System.out.println("===== 你的回合 =====");
-
-
-
-
-
-
-
+                yourTurn(HC,EC);
                 //判断敌人血量是否为0，如果为0回合结束，返回外循环，不为零继续
+                if (!EC.isAlive()) {
+                    wins += 1;
+                    //属性成长
+                    if (wins%3==0){
+                        HC.HP+=30;
+                        HC.MaxHP+=30;
+                        HC.Attack+=5;
+                        HC.Defense+=3;
+                        System.out.println("恭喜你胜利3场，属性获得提升：HP+30, ATK+5, DEF+3！");
+                    }
+                    System.out.println("\uD83C\uDF89 你击败了"+EC.name+"！");
+                    //恢复生命值
+                    int heal = R.nextInt(20,41);
+                    HC.heal(heal);
+                    System.out.println("💚 战斗结束！你恢复了"+heal+"点生命值");
+                    System.out.println("\uD83C\uDFC6 当前胜场: "+wins);
+                    //取得胜利
+                    count++;
+                    //询问是否继续
+                    System.out.println("═══════════════════════════════════════");
+                    System.out.print("继续下一场战斗？(y/n): ");
+                    Scanner sc = new Scanner(System.in);
+                    String answer = sc.nextLine();
+                    System.out.println("═══════════════════════════════════════");
+                    if (answer.toLowerCase().equals("y")) {
+                        break;
+                    }else if (answer.toLowerCase().equals("n")) {
+                        endGame(wins,count);
+                        //游戏结束
+                    }else{
+                        System.out.println("输入错误，游戏自动结束");
+                        endGame(wins,count);
+                    }
+                }
                 //敌人打我一下
+                enemyTurn(HC,EC);
                 //判断我的血量是否为0，为0结束游戏，不为0则循环，进行下一回合
+                if (!HC.isAlive()) {
+                    System.out.println("你死了，游戏结束");
+                    //游戏结束
+                    //游戏结算
+                    endGame(wins,count);
 
 
-
+                }
+                Round++;
             }
         }
 
 
+
+    }
+
+    //游戏结算
+    public void endGame(int wins,int counts) {
+        System.out.println("战斗核算：你一共战斗了"+counts+"场，胜利了"+wins+"场");
+        System.exit(0);
+    }
+
+
+
+
+    private void enemyTurn(HeroCharacter hc, EnemyCharachter ec) {
+        System.out.println("===== "+ec.name+"的回合 =====");
+        Random r = new Random();
+        boolean skill = r.nextBoolean();
+        if (skill) {
+            switch (ec.Skill){
+                case "猛击":
+//                    ⚔️ 敏捷刺客 对你使用了普通攻击，造成 15 点伤害！
+//                    ---------------------------------------
+                    int attack1 = (int)Math.round(ec.Attack*1.5);
+                    int damage1 = calculateDamage(attack1, hc.Defense);
+                    hc.takeDamage(damage1);
+                    System.out.println("⚔️"+ ec.name+"对你使用了"+ec.Skill+"，造成"+damage1+"点伤害！");
+                    break;
+                case "快速攻击":
+                    int attack2 = (int)Math.round(ec.Attack*0.75);
+                    int damage2 = calculateDamage(attack2, hc.Defense);
+                    hc.takeDamage(damage2);
+                    hc.takeDamage(damage2);
+                    System.out.println("⚔️"+ ec.name+"对你使用了"+ec.Skill+"，连续造成两次"+damage2+"点伤害！");
+                    break;
+                case "防御姿态":
+                    ec.defending = true;
+                    System.out.println("对手开启了防御姿态");
+                    break;
+                case "火球术":
+                    int attack3 = (int)Math.round(ec.Attack*1.8);
+                    int damage3 = calculateDamage(attack3, hc.Defense);
+                    hc.takeDamage(damage3);
+                    System.out.println("⚔️"+ ec.name+"对你使用了"+ec.Skill+"，造成"+damage3+"点伤害！");
+                    break;
+            }
+        }else {
+            int damage4 = calculateDamage(ec.Attack, hc.Defense);
+            hc.takeDamage(damage4);
+            System.out.println("⚔\uFE0F "+ec.name+" 对你使用了普通攻击，造成"+damage4+"点伤害！");
+        }
 
     }
 
@@ -105,11 +187,12 @@ public class FightingGame {
                 int damage=calculateDamage(player.Attack,enemy.Defense);
                 System.out.println("你对"+enemy.name+" 使用了普通攻击，造成"+damage +" 点伤害");
                 enemy.takeDamage(damage);
+                break;
             }
             case 2:{
                // 💥 消耗10HP，你对 敏捷刺客 使用了强力一击，造成 31 点伤害！
                 if (player.HP >10) {
-                    player.takeDamage(10);
+                    player.HP -=10;
                     int attack = (int) Math.round(player.Attack*1.8);
                     int damage=calculateDamage(attack,enemy.Defense);
                     System.out.println("你对"+enemy.name+" 使用了强力一击，造成"+damage +" 点伤害");
@@ -117,10 +200,19 @@ public class FightingGame {
                 }else {
                     System.out.println("体力不足，攻击失败");
                 }
-
+                break;
             }
             case 3:{
-
+                if (player.HP >10) {
+                    player.HP -=10;
+                    Random rand = new Random();
+                    int heal =  rand.nextInt(21);
+                    System.out.println("使用了生命汲取，消耗了10点生命，恢复了"+heal+"点生命");
+                    player.heal(heal);
+                } else if (player.HP<=10) {
+                    System.out.println("体力不足，使用失败");
+                }
+                break;
             }
 
         }

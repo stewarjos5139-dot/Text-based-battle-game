@@ -33,7 +33,7 @@ public class Character {
 
      //受到伤害
     public void takeDamage(int amount){
-        int damage = amount - Defense;
+        int damage = amount;
         if (damage <= 0){
             damage = 1;
         }
